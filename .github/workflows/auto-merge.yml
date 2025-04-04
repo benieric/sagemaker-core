@@ -1,0 +1,63 @@
+name: Auto-Merge Botocore Sync PRs
+
+on:
+  check_suite:
+    types: [completed]
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read
+
+jobs:
+  auto-merge-sync-prs:
+    runs-on: ubuntu-latest
+    if: github.event.check_suite.conclusion == 'success' && startsWith(github.event.check_suite.head_branch,  'botocore-sync')
+    steps:
+      - name: Check PR Merge Criteria
+        uses: actions/github-script@v7
+        id: check-pr
+        with:
+          script: |
+            console.log("Checking PR Merge Criteria");
+            const prs = context.payload.check_suite.pull_requests;
+
+            if (prs.length !== 1) {
+              core.setOutput("auto-merge", "false");
+              return core.setFailed('Unexpected number of PRs');
+            }
+
+            const pr = prs[0];
+            const { data: prDetails } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number
+            });
+
+            const isBotAuthor = prDetails.user.login === "sagemaker-bot";
+            const isBotocoreSync = prDetails.head.ref.startsWith("botocore-sync") && prDetails.title.startsWith("Daily Sync with Botocore");
+
+            if (!isBotAuthor || !isBotocoreSync) {
+              return core.setFailed('PR does not meet auto-merge criteria');
+            } 
+            return;
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.CODEBUILD_ROLE_ARN }}
+          role-duration-seconds: 10800
+          aws-region: us-west-2
+      - name: Trigger Auto-Merge
+        uses: aws-actions/aws-codebuild-run-build@v1
+        with:
+          project-name: sagemaker-core-merge-botocore-pr
+          buildspec-override: |
+            version: 0.2
+            env:
+              variables:
+                REPOSITORY_NAME: ${{ github.repository }}
+                PR_NUMBER: ${{ github.event.check_suite.pull_requests[0].number }}
+                COMMIT_SHA: ${{ github.event.check_suite.pull_requests[0].head.sha }}
+          env-vars-for-codebuild: |
+            REPOSITORY_NAME,
+            PR_NUMBER,
+            COMMIT_SHA

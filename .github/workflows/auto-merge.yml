@@ -1,4 +1,4 @@
-name: Auto-Merge Botocore Sync PRs
+name: Merge Botocore Sync PRs
 
 on:
   check_suite:

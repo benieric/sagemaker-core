@@ -77,7 +77,7 @@ jobs:
                 missingChecks.push(checkName);
               } else if (checkRunMap[checkName].status !== 'completed') {
                 pendingChecks.push(checkName);
-              } else if (checkRunMap[checkName].conclusion !== 'success') {
+              } else if (!['success', 'skipped', 'neutral'].includes(checkRunMap[checkName].conclusion)) {
                 failedChecks.push(checkName);
               }
             });

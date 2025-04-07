@@ -51,12 +51,9 @@ jobs:
         uses: aws-actions/aws-codebuild-run-build@v1
         with:
           project-name: sagemaker-core-merge-botocore-pr
-          buildspec-override: |
-            version: 0.2
-            env:
-              variables:
-                PR_NUMBER: ${{ github.event.check_suite.pull_requests[0].number }}
-                COMMIT_SHA: ${{ github.event.check_suite.pull_requests[0].head.sha }}
           env-vars-for-codebuild: |
             PR_NUMBER,
             COMMIT_SHA
+        env:
+          PR_NUMBER: ${{ github.event.check_suite.pull_requests[0].number }}
+          COMMIT_SHA: ${{ github.event.check_suite.pull_requests[0].head.sha }}

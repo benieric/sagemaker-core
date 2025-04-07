@@ -54,7 +54,8 @@ jobs:
             version: 0.2
             env:
               variables:
-                REPOSITORY_NAME: ${{ github.repository }}
+                REPO_OWNER: ${{ github.repository_owner }}
+                REPO_NAME: ${{ github.repository }}
                 PR_NUMBER: ${{ github.event.check_suite.pull_requests[0].number }}
                 COMMIT_SHA: ${{ github.event.check_suite.pull_requests[0].head.sha }}
           env-vars-for-codebuild: |

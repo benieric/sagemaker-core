@@ -20,6 +20,7 @@ jobs:
           script: |
             console.log("Checking PR Merge Criteria");
             const prs = context.payload.check_suite.pull_requests;
+            console.log(JSON.stringify(context.payload.check_suite));
 
             if (prs.length !== 1) {
               core.setOutput("auto-merge", "false");

@@ -18,7 +18,7 @@ permissions:
 jobs:
   auto-merge-botocore-sync-prs:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.user.login == 'sagemaker-bot' && startsWith(github.event.pull_request.head.ref, 'botocore-sync')
+    if: github.event.pull_request.user.login == 'sagemaker-bot' && startsWith(github.event.pull_request.head.ref, 'botocore-sync') && startsWith(github.event.pull_request.title, 'Daily Sync with Botocore')
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4

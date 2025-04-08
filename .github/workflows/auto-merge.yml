@@ -26,7 +26,7 @@ jobs:
           role-to-assume: ${{ secrets.CODEBUILD_ROLE_ARN }}
           role-duration-seconds: 10800
           aws-region: us-west-2
-      - name: Trigger Auto-Merge
+      - name: Auto merge Botocore Sync PRs
         uses: aws-actions/aws-codebuild-run-build@v1
         with:
           project-name: sagemaker-core-merge-botocore-pr

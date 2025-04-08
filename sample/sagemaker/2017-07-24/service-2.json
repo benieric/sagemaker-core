@@ -1,5 +1,6 @@
 {
   "version":"2.0",
+  "TEST":true,
   "metadata":{
     "apiVersion":"2017-07-24",
     "endpointPrefix":"api.sagemaker",

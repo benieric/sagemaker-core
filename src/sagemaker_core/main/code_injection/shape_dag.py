@@ -10885,6 +10885,7 @@ SHAPE_DAG = {
             {"name": "CreationTime", "shape": "CreationTime", "type": "timestamp"},
             {"name": "ModelPackageStatus", "shape": "ModelPackageStatus", "type": "string"},
             {"name": "ModelApprovalStatus", "shape": "ModelApprovalStatus", "type": "string"},
+            {"name": "ModelLifeCycle", "shape": "ModelLifeCycle", "type": "structure"},
         ],
         "type": "structure",
     },
